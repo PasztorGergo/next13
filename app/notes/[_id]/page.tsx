@@ -1,10 +1,9 @@
 import React from "react";
-import { credentials, app, ObjectId } from "../../../lib/mongodb";
+import { app, ObjectId } from "../../../lib/mongodb";
 
 const getNote = async (noteId: string) => {
-  const user = await app.logIn(credentials);
-  const collection = user
-    .mongoClient("mongodb-atlas")
+  const collection = app.currentUser
+    ?.mongoClient("mongodb-atlas")
     .db("Next13")
     .collection("notes");
 

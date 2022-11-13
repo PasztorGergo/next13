@@ -1,12 +1,18 @@
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import { CreateNote, Note } from "../../components";
-import { app, credentials } from "../../lib/mongodb";
+import { app } from "../../lib/mongodb";
+
+export const dynamic = "auto",
+  dynamicParams = true,
+  revalidate = 0,
+  fetchCache = "auto",
+  runtime = "nodejs",
+  preferedRegion = "auto";
 
 const getNotes = async () => {
-  const user = await app.logIn(credentials);
-  const collection = user
-    .mongoClient("mongodb-atlas")
+  const collection = app.currentUser
+    ?.mongoClient("mongodb-atlas")
     .db("Next13")
     .collection("notes");
 
@@ -14,6 +20,8 @@ const getNotes = async () => {
 };
 
 const Notes = async () => {
+  console.log(app.currentUser);
+
   const notes = await getNotes();
   console.table(notes);
   return (
@@ -31,9 +39,11 @@ const Notes = async () => {
             title: string;
             isDone: boolean;
           }) => (
-            <Link href={`/notes/${_id}`}>
-              <Note key={_id} isDone={isDone} title={title} text={text} />
-            </Link>
+            <Suspense key={_id} fallback={<p>Loading note...</p>}>
+              <Link href={`/notes/${_id}`}>
+                <Note isDone={isDone} title={title} text={text} />
+              </Link>
+            </Suspense>
           )
         )}
       </section>

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { app, credentials } from "../../lib/mongodb";
+import { app } from "../../lib/mongodb";
 
 const CreateNote = () => {
   const { register, reset, handleSubmit } = useForm();
@@ -12,13 +12,12 @@ const CreateNote = () => {
 
   const createNewNote = async (data: any) => {
     setLoading(true);
-    const user = await app.logIn(credentials);
-    const collection = user
-      .mongoClient("mongodb-atlas")
+    const collection = app.currentUser
+      ?.mongoClient("mongodb-atlas")
       .db("Next13")
       .collection("notes");
 
-    await collection.insertOne({ title: data?.title, text: data?.text });
+    await collection?.insertOne({ title: data?.title, text: data?.text });
     reset();
     setLoading(false);
     router.refresh();
