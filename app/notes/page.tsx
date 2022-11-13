@@ -7,8 +7,7 @@ export const dynamic = "auto",
   dynamicParams = true,
   revalidate = 0,
   fetchCache = "auto",
-  runtime = "nodejs",
-  preferedRegion = "auto";
+  runtime = "nodejs";
 
 const getNotes = async () => {
   const collection = app.currentUser
