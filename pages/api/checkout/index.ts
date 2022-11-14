@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { stripe } from "../../lib/stripe";
+import { stripe } from "../../../lib/stripe";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,6 +20,5 @@ export default async function handler(
     success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `http://localhost:3000/error`,
   });
-
-  res.redirect(session.url as string);
+  res.status(200).json({ sessionId: session.id });
 }
